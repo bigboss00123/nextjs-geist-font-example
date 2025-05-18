@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTevolution - O Futuro da Tecnologia</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Three.js for 3D effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Modern font -->
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Syne', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.05;
+            z-index: 9999;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAGFBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANxM8mAAAACHRSTlMzMzMzMzMzM85JBgUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAwSURBVDjLY2AYBaNg8IATC4jPhPAZmRTgfEY4n4kBzmeG8ZmY4HxmOJ8FwWcdBQDWHyHB5CkGPQAAAABJRU5ErkJggg==');
+        }
+
+        .gradient-text {
+            background: linear-gradient(120deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .hero-gradient {
+            background: radial-gradient(circle at center, rgba(120, 75, 160, 0.3) 0%, transparent 70%);
+        }
+
+        .card-hover {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(120, 75, 160, 0.25);
+        }
+
+        .nav-link {
+            position: relative;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(120deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover {
+            color: #FF3CAC;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .glass-effect {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .parallax-card {
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+
+        .parallax-card > * {
+            transform: translateZ(50px);
+        }
+
+        .glow-effect {
+            position: relative;
+        }
+
+        .glow-effect::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(120deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .glow-effect:hover::before {
+            opacity: 1;
+        }
+
+        .magnetic-button {
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            transition: transform 0.3s ease;
+        }
+
+        .magnetic-button:hover {
+            transform: perspective(1000px) rotateX(10deg) rotateY(10deg);
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .scroll-progress {
+            width: 100%;
+            background: linear-gradient(120deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+            transition: height 0.1s ease;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #FF3CAC;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.3s ease;
+        }
+
+        .cursor-dot {
+            width: 4px;
+            height: 4px;
+            background: #784BA0;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+
+        .split-text {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .split-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .gradient-border {
+            position: relative;
+            border-radius: 15px;
+            padding: 1px;
+            background: linear-gradient(120deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+        }
+
+        .gradient-border-content {
+            background: #000;
+            border-radius: 14px;
+        }
+
+        /* Glitch effect */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #00fff9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                clip: rect(31px, 9999px, 94px, 0);
+            }
+            4.166666666666666% {
+                clip: rect(91px, 9999px, 43px, 0);
+            }
+            8.333333333333332% {
+                clip: rect(85px, 9999px, 30px, 0);
+            }
+            12.5% {
+                clip: rect(27px, 9999px, 92px, 0);
+            }
+            /* Add more keyframes as needed */
+        }
+
+        @keyframes glitch-anim2 {
+            0% {
+                clip: rect(65px, 9999px, 119px, 0);
+            }
+            4.166666666666666% {
+                clip: rect(79px, 9999px, 61px, 0);
+            }
+            8.333333333333332% {
+                clip: rect(78px, 9999px, 52px, 0);
+            }
+            12.5% {
+                clip: rect(84px, 9999px, 45px, 0);
+            }
+            /* Add more keyframes as needed */
+        }
+    </style>
+</head>
+<body class="bg-black">
+    <!-- Noise effect overlay -->
+    <div class="noise"></div>
+
+    <!-- Custom cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- Scroll progress indicator -->
+    <div class="scroll-indicator">
+        <div class="scroll-progress"></div>
+    </div>
+
+    <!-- Header/Navigation -->
+    <header class="fixed w-full top-0 z-50 glass-effect">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-3xl font-bold gradient-text tracking-wider glitch" data-text="MTevolution">MTevolution</div>
+                <div class="hidden md:flex space-x-12">
+                    <a href="#home" class="nav-link text-lg">Home</a>
+                    <a href="#produtos" class="nav-link text-lg">Produtos</a>
+                    <a href="#servicos" class="nav-link text-lg">Serviços</a>
+                    <a href="#blog" class="nav-link text-lg">Blog</a>
+                    <a href="#contato" class="nav-link text-lg">Contato</a>
+                </div>
+                <button class="md:hidden" id="mobile-menu-button">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="md:hidden hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-lg border-t border-gray-800" id="mobile-menu">
+                <div class="flex flex-col space-y-6 py-8 px-6">
+                    <a href="#home" class="nav-link">Home</a>
+                    <a href="#produtos" class="nav-link">Produtos</a>
+                    <a href="#servicos" class="nav-link">Serviços</a>
+                    <a href="#blog" class="nav-link">Blog</a>
+                    <a href="#contato" class="nav-link">Contato</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-24 md:pt-32 min-h-screen flex items-center relative hero-gradient">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="text-center max-w-5xl mx-auto">
+                <h1 class="text-4xl sm:text-6xl md:text-8xl font-bold mb-8 gradient-text leading-tight tracking-tight split-text glitch" data-text="O Futuro da Tecnologia em Moçambique">
+                    O Futuro da Tecnologia em Moçambique
+                </h1>
+                <p class="text-lg sm:text-xl md:text-2xl mb-8 md:mb-12 text-gray-400 leading-relaxed split-text px-4 sm:px-6">
+                    Transformando ideias em realidade digital com inovação e excelência
+                </p>
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <a href="#produtos" class="magnetic-button glow-effect px-8 py-4 rounded-full bg-gradient-to-r from-[#FF3CAC] via-[#784BA0] to-[#2B86C5] text-white font-bold text-lg hover:opacity-90 transition duration-300">
+                        Explore Nossos Produtos
+                    </a>
+                    <a href="#contato" class="magnetic-button px-8 py-4 rounded-full border-2 border-[#784BA0] text-white font-bold text-lg hover:bg-[#784BA0]/10 transition duration-300">
+                        Entre em Contato
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Floating elements -->
+        <div class="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-r from-[#FF3CAC] to-[#784BA0] rounded-full blur-3xl opacity-20 floating"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-40 h-40 bg-gradient-to-r from-[#784BA0] to-[#2B86C5] rounded-full blur-3xl opacity-20 floating" style="animation-delay: -2s"></div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="produtos" class="py-20 md:py-32 relative">
+        <div class="container mx-auto px-4 sm:px-6">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-12 md:mb-20 gradient-text tracking-tight split-text px-4">Nossos Produtos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+                <!-- Zamba -->
+                <div class="card-hover rounded-2xl overflow-hidden parallax-card">
+                    <div class="gradient-border">
+                        <div class="gradient-border-content p-6">
+                            <div class="aspect-w-16 aspect-h-9 mb-8">
+                                <img src="https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg" alt="Zamba E-commerce" class="rounded-xl object-cover w-full h-48 hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4 gradient-text">Zamba</h3>
+                            <p class="text-gray-400 mb-6 leading-relaxed">Plataforma de e-commerce revolucionária para vendas online e entregas</p>
+                            <a href="#" class="inline-block text-[#FF3CAC] hover:text-[#784BA0] transition-colors font-medium">Explorar →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kubuca -->
+                <div class="card-hover rounded-2xl overflow-hidden parallax-card">
+                    <div class="gradient-border">
+                        <div class="gradient-border-content p-6">
+                            <div class="aspect-w-16 aspect-h-9 mb-8">
+                                <img src="https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg" alt="Kubuca Cursos" class="rounded-xl object-cover w-full h-48 hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4 gradient-text">Kubuca</h3>
+                            <p class="text-gray-400 mb-6 leading-relaxed">Plataforma de cursos online e programação do futuro</p>
+                            <a href="#" class="inline-block text-[#FF3CAC] hover:text-[#784BA0] transition-colors font-medium">Explorar →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API WhatsApp -->
+                <div class="card-hover rounded-2xl overflow-hidden parallax-card">
+                    <div class="gradient-border">
+                        <div class="gradient-border-content p-6">
+                            <div class="aspect-w-16 aspect-h-9 mb-8">
+                                <img src="https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg" alt="API WhatsApp" class="rounded-xl object-cover w-full h-48 hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4 gradient-text">API WhatsApp</h3>
+                            <p class="text-gray-400 mb-6 leading-relaxed">Integração e automação inteligente de WhatsApp para empresas</p>
+                            <a href="#" class="inline-block text-[#FF3CAC] hover:text-[#784BA0] transition-colors font-medium">Explorar →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="servicos" class="py-20 md:py-32 relative hero-gradient">
+        <div class="container mx-auto px-4 sm:px-6">
+            <h2 class="text-5xl font-bold text-center mb-20 gradient-text tracking-tight split-text">Nossos Serviços</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                <!-- Web Development -->
+                <div class="card-hover rounded-2xl p-8 parallax-card">
+                    <h3 class="text-2xl font-bold mb-4 gradient-text">Desenvolvimento Web</h3>
+                    <p class="text-gray-400 leading-relaxed">Sites e aplicações web modernas e responsivas com experiências únicas</p>
+                </div>
+
+                <!-- Mobile Development -->
+                <div class="card-hover rounded-2xl p-8 parallax-card">
+                    <h3 class="text-2xl font-bold mb-4 gradient-text">Desenvolvimento Mobile</h3>
+                    <p class="text-gray-400 leading-relaxed">Aplicativos nativos e híbridos de alta performance</p>
+                </div>
+
+                <!-- AI Chatbots -->
+                <div class="card-hover rounded-2xl p-8 parallax-card">
+                    <h3 class="text-2xl font-bold mb-4 gradient-text">Chatbots de IA</h3>
+                    <p class="text-gray-400 leading-relaxed">Automação inteligente para atendimento personalizado</p>
+                </div>
+
+                <!-- Backend Django -->
+                <div class="card-hover rounded-2xl p-8 parallax-card">
+                    <h3 class="text-2xl font-bold mb-4 gradient-text">Backend Django</h3>
+                    <p class="text-gray-400 leading-relaxed">Desenvolvimento robusto de APIs e sistemas escaláveis</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="py-20 md:py-32">
+        <div class="container mx-auto px-4 sm:px-6">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-12 md:mb-20 gradient-text tracking-tight split-text px-4">Blog e Novidades</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+                <div class="card-hover rounded-2xl overflow-hidden parallax-card">
+                    <div class="gradient-border">
+                        <div class="gradient-border-content p-6">
+                            <div class="aspect-w-16 aspect-h-9 mb-8">
+                                <img src="https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg" alt="Blog Post" class="rounded-xl object-cover w-full h-48 hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4 gradient-text">Inovação em Moçambique</h3>
+                            <p class="text-gray-400 mb-6 leading-relaxed">Como a tecnologia está transformando o mercado moçambicano...</p>
+                            <a href="#" class="inline-block text-[#FF3CAC] hover:text-[#784BA0] transition-colors font-medium">Ler mais →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contato" class="py-20 md:py-32 hero-gradient">
+        <div class="container mx-auto px-4 sm:px-6">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-12 md:mb-20 gradient-text tracking-tight split-text px-4">Entre em Contato</h2>
+            <div class="max-w-2xl mx-auto">
+            <div class="card-hover rounded-2xl p-6 md:p-8">
+                    <form class="space-y-8" id="contact-form">
+                        <div>
+                            <label class="block mb-2 text-lg text-gray-300">Nome</label>
+                            <input type="text" class="w-full px-6 py-4 rounded-xl bg-black/30 border-2 border-gray-800 text-white focus:outline-none focus:border-[#784BA0] transition-colors" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-lg text-gray-300">Email</label>
+                            <input type="email" class="w-full px-6 py-4 rounded-xl bg-black/30 border-2 border-gray-800 text-white focus:outline-none focus:border-[#784BA0] transition-colors" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-lg text-gray-300">Mensagem</label>
+                            <textarea class="w-full px-6 py-4 rounded-xl bg-black/30 border-2 border-gray-800 text-white focus:outline-none focus:border-[#784BA0] transition-colors" rows="6" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 px-8 rounded-xl bg-gradient-to-r from-[#FF3CAC] via-[#784BA0] to-[#2B86C5] text-white font-bold text-lg hover:opacity-90 transition duration-300 magnetic-button">
+                            Enviar Mensagem
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-16 md:py-20 border-t border-gray-800">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+                <div>
+                    <h3 class="text-3xl font-bold gradient-text mb-6">MTevolution</h3>
+                    <p class="text-gray-400 leading-relaxed">Inovação e tecnologia em Moçambique</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-6">Produtos</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li><a href="#" class="hover:text-[#FF3CAC] transition-colors">Zamba</a></li>
+                        <li><a href="#" class="hover:text-[#FF3CAC] transition-colors">Kubuca</a></li>
+                        <li><a href="#" class="hover:text-[#FF3CAC] transition-colors">API WhatsApp</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-6">Serviços</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li><a href="#" class="hover:text-[#FF3CAC] transition-colors">Desenvolvimento Web</a></li>
+                        <li><a href="#" class="hover:text-[#FF3CAC] transition-colors">Desenvolvimento Mobile</a></li>
+                        <li><a href="#" class="hover:text-[#FF3CAC] transition-colors">Chatbots de IA</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-6">Contato</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li>info@mtevolution.com</li>
+                        <li>+258 XX XXX XXX</li>
+                        <li>Maputo, Moçambique</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-16 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 MTevolution. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize GSAP
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorDot = document.querySelector('.cursor-dot');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('mousedown', () => {
+            cursor.style.transform = 'scale(0.8)';
+            cursorDot.style.transform = 'scale(0.8)';
+        });
+
+        document.addEventListener('mouseup', () => {
+            cursor.style.transform = 'scale(1)';
+            cursorDot.style.transform = 'scale(1)';
+        });
+
+        // Magnetic buttons
+        document.querySelectorAll('.magnetic-button').forEach(button => {
+            button.addEventListener('mousemove', (e) => {
+                const rect = button.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const deltaX = (x - centerX) / centerX;
+                const deltaY = (y - centerY) / centerY;
+                
+                button.style.transform = `perspective(1000px) rotateX(${deltaY * 10}deg) rotateY(${deltaX * 10}deg) scale3d(1.05, 1.05, 1.05)`;
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            });
+        });
+
+        // Scroll progress indicator
+        const scrollIndicator = document.querySelector('.scroll-progress');
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrolled = window.scrollY;
+            const progress = (scrolled / documentHeight) * 100;
+            scrollIndicator.style.height = `${progress}%`;
+        });
+
+        // Parallax cards
+        document.querySelectorAll('.parallax-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const deltaX = (x - centerX) / centerX;
+                const deltaY = (y - centerY) / centerY;
+                
+                card.style.transform = `perspective(1000px) rotateX(${deltaY * 5}deg) rotateY(${deltaX * 5}deg)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            });
+        });
+
+        // GSAP animations
+        gsap.utils.toArray('.split-text').forEach(text => {
+            ScrollTrigger.create({
+                trigger: text,
+                start: 'top 80%',
+                onEnter: () => text.classList.add('visible')
+            });
+        });
+
+        // Form submission handling
+        const contactForm = document.querySelector('#contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Mensagem enviada com sucesso!');
+                contactForm.reset();
+            });
+        }
+    </script>
+</body>
+</html>
