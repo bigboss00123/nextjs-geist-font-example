@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTevolution - O Futuro da Tecnologia</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Three.js for 3D effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Modern font -->
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="bg-black">
+    <!-- Noise effect overlay -->
+    <div class="noise"></div>
+
+    <!-- Custom cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- Scroll progress indicator -->
+    <div class="scroll-indicator">
+        <div class="scroll-progress"></div>
+    </div>
+
+    <!-- Header/Navigation -->
+    <header class="fixed w-full top-0 z-50 glass-effect">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-3xl font-bold gradient-text tracking-wider glitch" data-text="MTevolution">MTevolution</div>
+                <div class="hidden md:flex space-x-12">
+                    <a href="{% url 'core:home' %}#home" class="nav-link text-lg">Home</a>
+                    <a href="{% url 'core:home' %}#produtos" class="nav-link text-lg">Produtos</a>
+                    <a href="{% url 'core:home' %}#servicos" class="nav-link text-lg">Serviços</a>
+                    <a href="{% url 'core:home' %}#blog" class="nav-link text-lg">Blog</a>
+                    <a href="{% url 'core:home' %}#contato" class="nav-link text-lg">Contato</a>
+                </div>
+                <button class="md:hidden" id="mobile-menu-button">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="md:hidden hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-lg border-t border-gray-800" id="mobile-menu">
+                <div class="flex flex-col space-y-6 py-8 px-6">
+                    <a href="{% url 'core:home' %}#home" class="nav-link">Home</a>
+                    <a href="{% url 'core:home' %}#produtos" class="nav-link">Produtos</a>
+                    <a href="{% url 'core:home' %}#servicos" class="nav-link">Serviços</a>
+                    <a href="{% url 'core:home' %}#blog" class="nav-link">Blog</a>
+                    <a href="{% url 'core:home' %}#contato" class="nav-link">Contato</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="py-16 md:py-20 border-t border-gray-800">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+                <div>
+                    <h3 class="text-3xl font-bold gradient-text mb-6">>MTevolution - O Futuro da Tecnologi</h3>
+                    <p class="text-gray-400 leading-relaxed">Inovação e tecnologia em Moçambique</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-6">Produtos</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        {% for product in footer_products %}
+                        <li><a href="{% url 'products:product-detail' product.slug %}" class="hover:text-[#FF3CAC] transition-colors">{{ product.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-6">Serviços</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        {% for service in footer_services %}
+                        <li><a href="{% url 'services:service-detail' service.slug %}" class="hover:text-[#FF3CAC] transition-colors">{{ service.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-6">Contato</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li>info@mtevolution.com</li>
+                        <li>+258 XX XXX XXX</li>
+                        <li>Maputo, Moçambique</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-16 pt-8 text-center text-gray-400">
+                <p>&copy; {% now "Y" %} MTevolution. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/main.js' %}" defer></script>
+</body>
+</html>
