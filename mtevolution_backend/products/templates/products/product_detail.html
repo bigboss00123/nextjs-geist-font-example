@@ -1,0 +1,72 @@
+{% extends 'core/index.html' %}
+{% load static %}
+
+{% block content %}
+<section class="pt-24 md:pt-32 min-h-screen relative hero-gradient">
+    <div class="container mx-auto px-4 sm:px-6">
+        <div class="max-w-5xl mx-auto">
+            <!-- Product Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl sm:text-6xl font-bold mb-8 gradient-text leading-tight tracking-tight">
+                    {{ product.name }}
+                </h1>
+                <div class="flex justify-center items-center gap-4 mb-8">
+                    {% if product.status == 'LIVE' %}
+                    <span class="px-4 py-2 text-sm rounded-full bg-green-500/20 text-green-400">Live</span>
+                    {% else %}
+                    <span class="px-4 py-2 text-sm rounded-full bg-purple-500/20 text-purple-400">Em Desenvolvimento</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Product Image -->
+            <div class="mb-12">
+                {% if product.featured_image %}
+                <img src="{{ product.featured_image.url }}" alt="{{ product.name }}" class="w-full rounded-2xl shadow-2xl">
+                {% else %}
+                <img src="{% static 'img/products/'|add:product.product_type|lower|add:'.svg' %}" alt="{{ product.name }}" class="w-full rounded-2xl shadow-2xl">
+                {% endif %}
+            </div>
+
+            <!-- Product Description -->
+            <div class="card-hover rounded-2xl p-8 mb-12">
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Sobre o {{ product.name }}</h2>
+                <div class="text-gray-300 space-y-6 leading-relaxed">
+                    {{ product.description|linebreaks }}
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="card-hover rounded-2xl p-8 mb-12">
+                <h2 class="text-3xl font-bold mb-6 gradient-text">Recursos</h2>
+                <div class="text-gray-300 space-y-4">
+                    {% for feature in product.features.split %}
+                        {% if feature|length > 0 %}
+                        <div class="flex items-start gap-4">
+                            <span class="text-[#FF3CAC]">•</span>
+                            <p>{{ feature|cut:"-"|cut:"  " }}</p>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="text-center space-y-6">
+                {% if product.status == 'LIVE' %}
+                <a href="{{ product.url }}" target="_blank" class="inline-block py-4 px-8 rounded-xl bg-gradient-to-r from-[#FF3CAC] via-[#784BA0] to-[#2B86C5] text-white font-bold text-lg hover:opacity-90 transition-opacity">
+                    Acessar {{ product.name }}
+                </a>
+                {% endif %}
+                <a href="{% url 'core:home' %}#produtos" class="block text-gray-400 hover:text-white transition-colors">
+                    ← Voltar para Produtos
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating elements -->
+    <div class="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-r from-[#FF3CAC] to-[#784BA0] rounded-full blur-3xl opacity-20 floating"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-40 h-40 bg-gradient-to-r from-[#784BA0] to-[#2B86C5] rounded-full blur-3xl opacity-20 floating" style="animation-delay: -2s"></div>
+</section>
+{% endblock %}
